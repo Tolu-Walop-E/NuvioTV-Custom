@@ -55,9 +55,9 @@ class ExperienceModeSelectionViewModel @Inject constructor(
 ) : ViewModel() {
     suspend fun choose(mode: ExperienceMode) {
         experienceModeDataStore.setMode(mode)
-        // nt20 single-layout consolidation: both modes use the Modern layout; setting
-        // it here marks has_chosen_layout so the old layout-picker step is skipped.
-        layoutPreferenceDataStore.setLayout(HomeLayout.MODERN)
+        if (mode == ExperienceMode.ESSENTIAL) {
+            layoutPreferenceDataStore.setLayout(HomeLayout.MODERN)
+        }
     }
 }
 

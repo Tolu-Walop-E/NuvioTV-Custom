@@ -156,6 +156,7 @@ import com.nuvio.tv.domain.model.CardDepthStyle
 import com.nuvio.tv.domain.model.CosmeticEntitlement
 import com.nuvio.tv.domain.model.DiscoverLocation
 import com.nuvio.tv.domain.model.ExperienceMode
+import com.nuvio.tv.domain.model.HomeLayout
 import com.nuvio.tv.domain.model.MemberAccess
 import com.nuvio.tv.domain.model.NavigationMenuPosition
 import com.nuvio.tv.domain.model.SettingsUiStyle
@@ -222,6 +223,7 @@ private data class MainUiPrefs(
     val amoledMode: Boolean = false,
     val amoledSurfacesMode: Boolean = false,
     val hasChosenLayout: Boolean? = null,
+    val selectedLayout: HomeLayout = HomeLayout.MODERN,
     val experienceMode: ExperienceMode? = null,
     val experienceModeLoaded: Boolean = false,
     val addonSetupSkipped: Boolean = false,
@@ -504,15 +506,22 @@ class MainActivity : ComponentActivity() {
                         experienceModeLoaded = true,
                     )
                 }
-                val layoutAndFeaturesFlow = combine(
+                val layoutChoiceFlow = combine(
                     layoutPreferenceDataStore.hasChosenLayout,
+                    layoutPreferenceDataStore.selectedLayout
+                ) { hasChosenLayout, selectedLayout ->
+                    hasChosenLayout to selectedLayout
+                }
+                val layoutAndFeaturesFlow = combine(
+                    layoutChoiceFlow,
                     layoutPreferenceDataStore.sidebarCollapsedByDefault,
                     layoutPreferenceDataStore.modernSidebarEnabled,
                     layoutPreferenceDataStore.modernSidebarBlurEnabled,
                     layoutPreferenceDataStore.discoverLocation,
-                ) { hasChosenLayout, sidebarCollapsed, modernSidebarEnabled, modernSidebarBlurPref, discoverLocation ->
+                ) { layoutChoice, sidebarCollapsed, modernSidebarEnabled, modernSidebarBlurPref, discoverLocation ->
                     MainUiPrefs(
-                        hasChosenLayout = hasChosenLayout,
+                        hasChosenLayout = layoutChoice.first,
+                        selectedLayout = layoutChoice.second,
                         sidebarCollapsed = sidebarCollapsed,
                         modernSidebarEnabled = modernSidebarEnabled,
                         modernSidebarBlurPref = modernSidebarBlurPref,
@@ -543,6 +552,7 @@ class MainActivity : ComponentActivity() {
                 ) { themePrefs, layoutPrefs, extraPrefs, cardDepthStyle, navigationMenuPosition ->
                     themePrefs.copy(
                         hasChosenLayout = layoutPrefs.hasChosenLayout,
+                        selectedLayout = layoutPrefs.selectedLayout,
                         sidebarCollapsed = layoutPrefs.sidebarCollapsed,
                         modernSidebarEnabled = layoutPrefs.modernSidebarEnabled,
                         modernSidebarBlurPref = layoutPrefs.modernSidebarBlurPref,
@@ -740,7 +750,8 @@ class MainActivity : ComponentActivity() {
                         return@Surface
                     }
                     val sidebarCollapsed = mainUiPrefs.sidebarCollapsed
-                    val modernSidebarEnabled = mainUiPrefs.modernSidebarEnabled
+                    val modernSidebarEnabled =
+                        mainUiPrefs.selectedLayout == HomeLayout.MODERN && mainUiPrefs.modernSidebarEnabled
                     val modernSidebarBlurEnabled =
                         mainUiPrefs.modernSidebarBlurPref && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
                     val hideBuiltInHeadersForFloatingPill = modernSidebarEnabled && !sidebarCollapsed
@@ -748,8 +759,7 @@ class MainActivity : ComponentActivity() {
                     val startDestination = when {
                         needsExperienceSelection -> Screen.ExperienceModeSelection.route
                         layoutChosen -> Screen.Home.route
-                        // nt20 single-layout consolidation: the layout picker is bypassed.
-                        else -> Screen.Home.route
+                        else -> Screen.LayoutSelection.route
                     }
                     val navController = rememberNavController()
                     // All navigation shells render the same NavHostController. Keep its

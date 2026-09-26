@@ -157,12 +157,11 @@ class LayoutPreferenceDataStore @Inject constructor(
     private fun positiveOrDefault(value: Int?, defaultValue: Int): Int =
         value?.takeIf { it > 0 } ?: defaultValue
 
-    // nt20 single-layout consolidation: the fork uses the Modern layout exclusively.
-    // Forced read-side (same pattern as the nt18 subtitle read normalisation) so
-    // stored or sync-imported CLASSIC/GRID values are neutralised — "selected_layout"
-    // rides in the synced layout_settings blob, so a write-side migration alone could
-    // be undone by a remote import. setLayout still records the has-chosen flag.
-    val selectedLayout: Flow<HomeLayout> = profileFlow { HomeLayout.MODERN }
+    val selectedLayout: Flow<HomeLayout> = profileFlow { prefs ->
+        val layoutName = prefs[layoutKey] ?: HomeLayout.MODERN.name
+        runCatching { HomeLayout.valueOf(layoutName) }
+            .getOrDefault(HomeLayout.MODERN)
+    }
 
     val continueWatchingEnabled: Flow<Boolean> = profileFlow { prefs ->
         prefs[continueWatchingEnabledKey] ?: true

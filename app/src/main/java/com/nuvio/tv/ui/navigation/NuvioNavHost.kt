@@ -120,9 +120,12 @@ fun NuvioNavHost(
     ) {
         composable(Screen.ExperienceModeSelection.route) {
             ExperienceModeSelectionScreen(
-                onContinue = {
-                    // nt20 single-layout consolidation: both modes go straight to Home.
-                    navController.navigate(Screen.Home.route) {
+                onContinue = { mode ->
+                    val destination = when (mode) {
+                        com.nuvio.tv.domain.model.ExperienceMode.ESSENTIAL -> Screen.Home.route
+                        com.nuvio.tv.domain.model.ExperienceMode.ADVANCED -> Screen.LayoutSelection.route
+                    }
+                    navController.navigate(destination) {
                         popUpTo(Screen.ExperienceModeSelection.route) { inclusive = true }
                     }
                 }
