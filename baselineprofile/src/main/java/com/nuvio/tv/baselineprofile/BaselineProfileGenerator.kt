@@ -21,7 +21,7 @@ class BaselineProfileGenerator {
 
     @Test
     fun generate() {
-        val targetPackage = "com.nuvio.tv.test"
+        val targetPackage = "com.nuvio.tv.tolu"
         rule.collect(
             packageName = targetPackage,
             includeInStartupProfile = true

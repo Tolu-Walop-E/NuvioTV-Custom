@@ -35,8 +35,10 @@ jobs:
       - name: Create CI-only local properties
         run: |
           printf '%s\n' \
-            'NUVIO_SUPABASE_URL=https://ci.invalid.example' \
-            'NUVIO_SUPABASE_ANON_KEY=ci-placeholder' \
+            'NUVIO_SUPABASE_URL=https://api.nuvio.tv' \
+            'NUVIO_SUPABASE_ANON_KEY=sb_publishable_1Clq8rlTVACkdcZuqr6_AD__xUUC_EN' \
+            'TV_LOGIN_WEB_BASE_URL=https://nuvio.tv/tv-login' \
+            'AVATAR_PUBLIC_BASE_URL=https://api.nuvio.tv/storage/v1/object/public/avatars' \
             > local.properties
 
       - name: Run focused unit tests

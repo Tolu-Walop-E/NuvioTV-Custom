@@ -23,6 +23,10 @@ local.properties
 libass-android
 Stremio addons refer
 nuviotv.jks
+*.jks
+*.keystore
+*.p12
+*.base64
 CLAUDE.md
 build_and_install.sh
 android-tv-samples
@@ -63,6 +67,9 @@ AGENTS.md
 /PR.md
 docs/
 status-page/
+# Local one-command APK output (never track)
+/builds/
+
 # Stray local artefacts (never track)
 /Player/
 /build-error.txt

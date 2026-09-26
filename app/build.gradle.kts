@@ -142,7 +142,7 @@ android {
     ndkVersion = "27.0.12077973"
 
     defaultConfig {
-        applicationId = "com.nuvio.tv.test"
+        applicationId = "com.nuvio.tv.tolu"
         minSdk = 24
         targetSdk = 36
         versionCode = 1362
@@ -184,7 +184,7 @@ android {
         buildConfigField("String", "SPONSOR_NAMES", buildConfigString(sponsorNames))
 
         // In-app updater (GitHub Releases)
-        buildConfigField("String", "GITHUB_OWNER", "\"Cxsmo-ai\"")
+        buildConfigField("String", "GITHUB_OWNER", "\"Tolu-Walop-E\"")
         buildConfigField("String", "GITHUB_REPO", "\"NuvioTV-Custom\"")
         // Keep update checks pointed at this fork's own releases. The fork
         // uses a distinct repository so upstream releases are never offered
