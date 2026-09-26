@@ -37,7 +37,10 @@ jobs:
           if [ -n "$LOCAL_PROPERTIES_BASE64" ]; then
             printf '%s' "$LOCAL_PROPERTIES_BASE64" | base64 --decode > local.properties
           else
-            touch local.properties
+            printf '%s\n' \
+            'NUVIO_SUPABASE_URL=https://ci.invalid.example' \
+            'NUVIO_SUPABASE_ANON_KEY=ci-placeholder' \
+            > local.properties
           fi
 
           if [ -n "$LOCAL_DEV_PROPERTIES_BASE64" ]; then
