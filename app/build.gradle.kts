@@ -145,8 +145,8 @@ android {
         applicationId = "com.nuvio.tv.tolu"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1362
-        versionName = "1.0.1-custom"
+        versionCode = 1363
+        versionName = "1.0.2-tolu"
 
         buildConfigField("String", "PARENTAL_GUIDE_API_URL", "\"${localProperties.getProperty("PARENTAL_GUIDE_API_URL", "")}\"")
         buildConfigField("String", "INTRODB_API_URL", "\"${localProperties.getProperty("INTRODB_API_URL", "")}\"")
